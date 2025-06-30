@@ -56,11 +56,11 @@ def on_join(data):
 def exit_instance(data):
     instance=data.get('instance')
     handle=data.get('handle')
+    session.clear()
     if instance and handle:
         leave_room(instance)
         emit("exit_ack",to=request.sid)
         emit("exit_msg",{'handle':f"{handle}",'time':f"{datetime.now().strftime('%H:%M')}"},to=instance)
-        session.clear()
     return
 
 @socketio.on('send_message')
