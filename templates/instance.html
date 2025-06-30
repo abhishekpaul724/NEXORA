@@ -218,6 +218,10 @@
             msgarea.innerHTML+=msg;
             msgarea.scrollTop=msgarea.scrollHeight;
         })
+        socket.on('intrusion',function(data){
+            alert(data.msg);
+            window.location.href='/';
+        })
     </script>
 </body>
 </html>
