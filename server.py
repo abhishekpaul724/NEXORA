@@ -8,6 +8,11 @@ app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY_NEXORA","4i*V;MrT6,17V*")
 socketio = SocketIO(app,manage_session=False)
 
 instances=[]
+LOG_FILE='nexora.log'
+
+def log(msg):
+    with open(LOG_FILE,'a') as f:
+        f.write(msg)
 
 @app.route('/')
 def access(error=""):
@@ -71,6 +76,7 @@ def send_message(data):
     if not instance or not handle or not msg:
         return
     elif instance!=session.get('instance') or handle!=session.get('handle'):
+        log(f"INTRUSION at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nCredentials: User Handle = {handle} , Instance ID = {instance}\n")
         emit('intrusion', {'msg': 'ALERT: Packet tampering detected. Intruder access denied.'}, room=request.sid)
         return
     else:
