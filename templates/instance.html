@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instance ID: {{instance}}</title>
+    <style>
+        *{
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+        html,body{
+            height:100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            cursor: url("/static/cursor.png");
+        }
+        .background{
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            background-color: #1b0033;
+            background-image: url("/static/instanceimg.jpg");
+            filter: brightness(0.2);
+            background-position:center;
+            background-size: cover;
+        }
+        .heading{
+            width: 100%;
+            position: fixed;
+            margin-top:1%;
+            display:flex;
+            justify-content: space-between;
+            font-family: monospace;
+            padding:0 31px;
+            font-size:1.5rem;
+        }
+        #heading{
+            color:#0ff;
+            padding: 1%;
+            border: 1px solid #0ff;
+            background-color: #00ffff1b;
+        }
+        #leave_room{
+            color:#ff8282;
+            padding: 1%;
+            border: 1px solid #ff8282;
+            background-color: #ff82821b;
+        }
+        .commsarea{
+            flex:1;
+            width:96%;
+            height:calc(100vh - 85px);
+            background-color: #00ffff1b;
+            margin-top: 85px;
+            align-self: center;
+            display:flex;
+            flex-direction: column;
+            align-items:center;
+            justify-content: space-around;
+        }
+        .msgarea{
+            width:90%;
+            height:100px;
+            flex-basis:85%;
+            overflow-y:scroll;
+            scroll-behavior: smooth;
+            display: flex;
+            flex-direction: column;
+            gap:10px;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        .sendmsg{
+            flex-basis:7%;
+            width: 96%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+        }
+        .sendmsg input{
+            flex: 1 1 auto;
+            min-width: 0;
+            display:block;
+        }
+        .sendmsg input::placeholder{
+            color: #ffff335e;
+            font-family: monospace;
+        }
+        #send_msg{
+            background-color: #ffff331b;
+            border: 1px solid #ffff33;
+            color: #ffff33;
+            font-size: 1.3rem;
+            padding: 10px 10px;
+            overflow-x: scroll;
+            scroll-behavior: smooth;
+        }
+        #send_msg:focus{
+            outline: none;
+        }
+        #sendbtn{
+            display: block;
+            background-color: #ff2a6e43;
+            border: 2px solid #ff2a6d;
+            padding:10px 50px;
+            color: #f7b7c7;
+            font-family: monospace;
+            font-size: 1.3rem;
+            flex: 0 0 auto;
+        }
+        #message span{
+            font-size:1.3rem;
+            color:#fff;
+            font-family: sans-serif;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .yellow{
+            color:#ffff33 !important;
+        }
+        .gray{
+            color:rgba(245, 244, 244, 0.566) !important;
+            font-size: 0.9rem !important; 
+            margin-left: 5px !important;
+        }
+        .exit{
+            color:#ff5c5c !important;
+        }
+         @media screen and (max-width:768px){
+            .heading{
+                font-size: 1rem;
+                padding: 10px;
+            }
+            .commsarea{
+                height: calc(100vh-50px);
+                margin-top: 50px;
+            }
+            #message span{
+                font-size:1.2rem;
+            }
+            #send_msg{
+                font-size:1.15rem;
+            }
+            #sendbtn{
+                font-size: 1.2rem;
+                padding: 10px;
+            }
+         }
+        @media screen and (max-width:480px){
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="heading">
+        <p id="heading">Instance {{instance}}</p>
+        <p id="leave_room" onclick="exitInstance()">Exit Instance</p>
+    </div>
+    <div class="commsarea">
+        <div class="msgarea" id="message">
+        </div>
+        <div class="sendmsg">
+            <input type="text" name="send_msg" id="send_msg" placeholder="Jack in your message">
+            <p id="sendbtn" onclick="sendMessage()">Send</p>
+        </div>
+    </div>
+    <script>
+        var input = document.getElementById("send_msg");
+        input.addEventListener("keypress", function(event) {     
+        if (event.key === "Enter") {        
+            event.preventDefault();
+            document.getElementById("sendbtn").click();
+        }
+        });
+        const send_keyboard = document.getElementById("send_msg");
+        window.addEventListener("resize", () => {
+        send_keyboard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.emit('join',{ instance:"{{instance}}",handle:"{{ handle }}" });
+        socket.on('ack_join',function(data){
+            enter_msg=document.getElementById('message');
+            let enter=`<span><span class='yellow'>${data.msg}</span><span class="gray">${data.time}</span></span>`
+            enter_msg.innerHTML+=enter;
+        })
+        function exitInstance(){
+            socket.emit("exit_instance",{instance: "{{instance}}",handle: "{{handle}}"});
+        }
+        socket.on('exit_ack',function(){
+            window.location.href='/';
+        })
+        socket.on('exit_msg',function(data){
+            msgarea=document.getElementById('message');
+            leave_msg=`<span><span class='exit'>${data.handle} has disconnected from the instance</span><span class="gray">${data.time}</span></span>`;
+            msgarea.innerHTML+=leave_msg;
+        })
+        function sendMessage(){
+            input=document.getElementById('send_msg');
+            socket.emit('send_message',
+                {
+                    instance: "{{instance}}",
+                    handle: "{{handle}}",
+                    msg: input.value
+                }
+            )
+            input.value="";
+        }
+        socket.on('send_ack',function(data) {
+            msgarea=document.getElementById('message');
+            msg=`<span><span class='yellow'>${data.handle}: </span><span>${data.msg}</span><span class="gray">${data.time}</span></span>`;
+            msgarea.innerHTML+=msg;
+            msgarea.scrollTop=msgarea.scrollHeight;
+        })
+    </script>
+</body>
+</html>
