@@ -45,14 +45,14 @@ def retrieve_data():
 def room(instance):
     if 'instance' not in session or session['instance']!=instance:
         return render_template('link.html', error="Entry denied. Authenticate before proceeding.")
-    handle=session.get('handle','Ghost')
+    handle=session.get('handle')
     return render_template('instance.html',instance=instance,handle=handle)
 
 @socketio.on('join')
 def on_join(data):
     instance=data.get('instance')
     handle=data.get('handle')
-    if instance and handle:
+    if instance==session['instance'] and handle==session['handle']:
         join_room(instance)
         emit('ack_join',{'msg':f"{handle} has connected to the instance",'time':f"{datetime.now().strftime('%H:%M')}"},to=instance)
     else:
@@ -62,11 +62,11 @@ def on_join(data):
 def exit_instance(data):
     instance=data.get('instance')
     handle=data.get('handle')
-    session.clear()
-    if instance and handle:
+    if instance==session['instance'] and handle==session['handle']:
         leave_room(instance)
         emit("exit_ack",to=request.sid)
         emit("exit_msg",{'handle':f"{handle}",'time':f"{datetime.now().strftime('%H:%M')}"},to=instance)
+        session.clear()
     return
 
 @socketio.on('send_message')
