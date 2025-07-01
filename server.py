@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY_NEXORA","4i*V;MrT6,17V*")
 socketio = SocketIO(app,manage_session=False)
 
