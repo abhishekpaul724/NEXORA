@@ -76,8 +76,8 @@ def send_message(data):
     if not instance or not handle or not msg:
         return
     elif instance!=session.get('instance') or handle!=session.get('handle'):
-        log(f"INTRUSION at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nCredentials: User Handle = {handle} , Instance ID = {instance}\n")
-        emit('intrusion', {'msg': 'ALERT: Packet tampering detected. Intruder access denied.'}, room=request.sid)
+        log(f"Unauthenticated packet sent at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nCredentials: User Handle = {handle} , Instance ID = {instance}\n")
+        emit('intrusion', {'msg': 'ALERT: Packet tampering detected. Intruder message request denied.'}, room=request.sid)
         return
     else:
         emit('send_ack',{'handle':f"{handle}", 'msg': f"{msg} ",'time': f"{datetime.now().strftime('%H:%M')}"},to=instance)
