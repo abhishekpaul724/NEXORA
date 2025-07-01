@@ -179,7 +179,15 @@
         const send_keyboard = document.getElementById("send_msg");
         window.addEventListener("resize", () => {
         send_keyboard.scrollIntoView({ behavior: "smooth", block: "nearest" });
-});
+        });
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.shiftKey && event.key === 'i') {
+                event.preventDefault();
+            }
+            if (event.key === 'F12') {
+                event.preventDefault();
+            }
+        });
     </script>
     <script src="{{url_for('static',filename='socket.io.js')}}"></script>
     <script type="text/javascript" charset="utf-8">
