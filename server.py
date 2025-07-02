@@ -10,6 +10,15 @@ socketio = SocketIO(app,manage_session=False)
 
 instances=[]
 LOG_FILE='nexora.log'
+ENV_FILE='nexora.env'
+
+def filecheck():
+    if not os.path.isfile(LOG_FILE):
+        with open(LOG_FILE,'w') as f:
+            print('Log File Created')
+    if not os.path.isfile(ENV_FILE):
+        with open(ENV_FILE,'w') as f:
+            print('ENV File Created')
 
 def log(msg):
     with open(LOG_FILE,'a') as f:
