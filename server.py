@@ -4,25 +4,25 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
-app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_NEXORA")
-socketio = SocketIO(app,manage_session=False)
-
-instances=[]
 LOG_FILE='nexora.log'
 ENV_FILE='nexora.env'
 
-def filecheck():
-    if not os.path.isfile(LOG_FILE):
-        with open(LOG_FILE,'w') as f:
-            print('Log File Created')
-    if not os.path.isfile(ENV_FILE):
-        with open(ENV_FILE,'w') as f:
-            f.write("SECRET_KEY_NEXORA=/*Inject your Secret Key*/")
-            print('ENV File Created')
+if not os.path.isfile(LOG_FILE):
+    with open(LOG_FILE,'w') as f:
+        print('Log File Created')
+if not os.path.isfile(ENV_FILE):
+    with open(ENV_FILE,'w') as f:
+        f.write("SECRET_KEY_NEXORA=/*Inject your Secret Key*/")
+        print('ENV File Created')
+
+load_dotenv(override=True)
+
+app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_NEXORA","kx;/M4r32vi_!$C")
+socketio = SocketIO(app,manage_session=False)
+
+instances=[]
 
 def log(msg):
     with open(LOG_FILE,'a') as f:
@@ -97,5 +97,4 @@ def send_message(data):
         emit('send_ack',{'handle':f"{handle}", 'msg': f"{msg} ",'time': f"{datetime.now().strftime('%H:%M')}"},to=instance)
 
 if __name__ == '__main__':
-    filecheck()
     socketio.run(app,host='0.0.0.0',debug=True)
