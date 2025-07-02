@@ -93,4 +93,5 @@ def send_message(data):
         emit('send_ack',{'handle':f"{handle}", 'msg': f"{msg} ",'time': f"{datetime.now().strftime('%H:%M')}"},to=instance)
 
 if __name__ == '__main__':
+    filecheck()
     socketio.run(app,host='0.0.0.0',debug=True)
