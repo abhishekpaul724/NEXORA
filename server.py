@@ -1,11 +1,14 @@
 from flask import Flask, render_template, session, request, redirect, url_for
 from flask_socketio import SocketIO, join_room, leave_room,emit,send
 from datetime import datetime
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY_NEXORA","4i*V;MrT6,17V*")
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_NEXORA")
 socketio = SocketIO(app,manage_session=False)
 
 instances=[]
@@ -18,6 +21,7 @@ def filecheck():
             print('Log File Created')
     if not os.path.isfile(ENV_FILE):
         with open(ENV_FILE,'w') as f:
+            f.write("SECRET_KEY_NEXORA=/*Inject your Secret Key*/")
             print('ENV File Created')
 
 def log(msg):
