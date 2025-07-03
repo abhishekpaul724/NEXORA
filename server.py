@@ -12,7 +12,7 @@ if not os.path.isfile(LOG_FILE):
         print('Log File Created')
 if not os.path.isfile(ENV_FILE):
     with open(ENV_FILE,'w') as f:
-        f.write("SECRET_KEY_NEXORA=/*Inject your Secret Key*/")
+        f.write('SECRET_KEY_NEXORA="kx;/M4r32vi_!$C" # Inject your Secret Key')
         print('ENV File Created')
 
 load_dotenv(override=True)
