@@ -1,0 +1,115 @@
+ *{
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+            cursor: url("/static/cursor.png");
+        }
+        .background{
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            filter: brightness(0.15);
+            background-image: url("/static/background.jpeg");
+            background-position:center;
+            background-size: cover;
+        }
+        .outercont{
+            display:flex;
+            width: 100%;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap:4rem;
+        }
+        .heading{
+            color:#ffff33ce;
+            font-family: monospace;
+            font-size:1.3rem;
+            font-style: italic;
+            padding:0.9rem;
+            border: 1.5px solid rgba(0, 255, 255, 0.351);
+            width:max-content;
+            background: rgba(0,255,255,0.1);
+        }
+        .data{
+            color:#fff;
+        }
+        .data form input{
+            height:3rem;
+            font-size: 1.3rem;
+            padding: 0.9rem;
+            border: 1px solid cyan;
+            background-color: #00ffff1b;
+            color:#0ff;
+            font-family: monospace;
+        }
+         .data form input::placeholder{
+            color:rgba(0, 255, 255, 0.389);
+         }
+        .data form input:focus{
+            outline: none;
+        }
+        .data form input::selection{   
+            color:#000;
+            background-color: #0ff;  
+        }
+        .button{
+            display: block;
+            margin-top:5px;
+            display: flex;
+            gap:5px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .button button{
+            height:3rem;
+            font-size: 1.3rem;
+            padding: 0.9rem;
+            border: 1px solid cyan;
+            background-color: #00ffff1b;
+            color:#0ff;
+            text-align: left;
+            font-family: monospace;
+        }
+        .button #deploy{
+            border: 1px solid #ff4c64;
+            background-color: #ff4c6432;
+            color: #fc97aa;
+            flex-basis: 50%;
+        }
+        .button #join{
+            border: 1px solid #ffff33;
+            background-color: #ffff3332;
+            color: #ffff33;
+            flex-basis: 50%;
+        }
+        .error{
+            color:#FF6F00;
+            filter: drop-shadow(0 0 10px #FF6F00);
+            font-family: monospace;
+            font-size: 1.3rem;
+            border: 1px solid #ff6f00;
+            padding:10px;
+            display: none;
+        }
+
+        @media screen and (max-width:480px){
+            .data input{
+                display: block;
+                align-self: center;
+            }
+            .button{
+                flex-direction: column;
+            }
+            .data{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .heading{
+                font-size: 0.65rem;
+                padding:0.3rem;
+            }
+        }
