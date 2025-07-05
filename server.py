@@ -7,19 +7,19 @@ import os
 LOG_FILE='nexora.log'
 ENV_FILE='nexora.env'
 
+# File Check Logic
 if not os.path.isfile(LOG_FILE):
     with open(LOG_FILE,'w') as f:
-        print('Log File Created')
+        f.write(f"{datetime.now().strftime('%d-%m-%Y %H:%M')} Log File Created")
 if not os.path.isfile(ENV_FILE):
     with open(ENV_FILE,'w') as f:
-        f.write('SECRET_KEY_NEXORA="kx;/M4r32vi_!$C" # Inject your Secret Key')
-        print('ENV File Created')
+        f.write("SECRET_KEY_NEXORA=INJECT_YOUR_SECRET_KEY_HERE\n")
 
-load_dotenv(override=True)
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY_NEXORA","kx;/M4r32vi_!$C")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY_NEXORA',"R9:3YaWZ/9:!BOa")
 socketio = SocketIO(app,manage_session=False)
 
 instances=[]
@@ -32,11 +32,12 @@ def log(msg):
 def access(error=""):
     return render_template('link.html',error=error)
 
+# Retrieval of data from the login page
 @app.route('/initiate', methods=['POST'])
 def retrieve_data():
     global instances
-    handle=request.form.get('handle')
-    instance=request.form.get('instance')
+    handle=request.form.get('handle').strip()[:15]
+    instance=request.form.get('instance').strip()[:15]
     action=request.form.get('action')
     if not handle or not instance or not action:
         return render_template('link.html', error="System doesn’t run on ghosts. Fill every field.")
@@ -65,7 +66,7 @@ def room(instance):
 def on_join(data):
     instance=data.get('instance')
     handle=data.get('handle')
-    if instance==session['instance'] and handle==session['handle']:
+    if instance==session.get('instance') and handle==session.get('handle'):
         join_room(instance)
         emit('ack_join',{'msg':f"{handle} has connected to the instance",'time':f"{datetime.now().strftime('%H:%M')}"},to=instance)
     else:
@@ -75,7 +76,7 @@ def on_join(data):
 def exit_instance(data):
     instance=data.get('instance')
     handle=data.get('handle')
-    if instance==session['instance'] and handle==session['handle']:
+    if instance==session.get('instance') and handle==session.get('handle'):
         leave_room(instance)
         emit("exit_ack",to=request.sid)
         emit("exit_msg",{'handle':f"{handle}",'time':f"{datetime.now().strftime('%H:%M')}"},to=instance)
