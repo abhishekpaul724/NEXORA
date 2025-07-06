@@ -11,8 +11,8 @@
     <div class="outercont">
         <div class="data">
             <form method="POST" action="/initiate">
-                <input type="text" name="handle" id="handle" placeholder="Operator Handle" required>
-                <input type="text" name="instance" id="instance" placeholder="Instance ID" required>
+                <input type="text" name="handle" id="handle" placeholder="Operator Handle" title="Inject your Handle, operator." oninvalid="this.setCustomValidity('Are you a ghost? Inject your handle.')" required>
+                <input type="text" name="instance" id="instance" placeholder="Instance ID" title="Inject the Instance ID in which you wish to enter." oninvalid="this.setCustomValidity('Instance ID, operator?')" required>
                 <div class="button">
                     <button type="submit" id="deploy" name="action" value="deploy">Deploy Instance</button>
                     <button type="submit" id="join" name="action" value="join">Join Instance</button>

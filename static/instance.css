@@ -42,6 +42,16 @@
             padding: 1%;
             border: 1px solid #ff8282;
             background-color: #ff82821b;
+            transition-timing-function: ease;
+        }
+        #leave_room:hover{
+            border:2px solid #ff8282;
+            background-color: #ff828232;
+        }
+        #leave_room:focus,#leave_room:active{
+            border:2px solid #ff8282;
+            background-color: #ff828232;
+            box-shadow: 0 0 10px #ff8282;
         }
         .commsarea{
             flex:1;
@@ -104,6 +114,9 @@
             font-family: monospace;
             font-size: 1.3rem;
             flex: 0 0 auto;
+        }
+        #sendbtn:hover,#sendbtn:focus,#sendbtn:active{
+            background-color: #ff2a6e69;
         }
         #message span{
             font-size:1.3rem;
